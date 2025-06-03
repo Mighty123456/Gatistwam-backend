@@ -8,13 +8,15 @@ const {
 } = require('../../controllers/contactController');
 const Contact = require('../../models/Contact');
 const { sendReplyEmail } = require('../../utils/emailService');
-const auth = require('../../middleware/auth');
+const { authenticateToken, isAdmin } = require('../../middleware/auth');
 
 // Public routes
 router.post('/', submitContact);
 
 // Protected routes (require authentication)
-router.use(auth); // Add authentication middleware for all routes below
+router.use(authenticateToken);
+router.use(isAdmin);
+
 router.get('/', getContacts);
 router.get('/:id', getContact);
 router.put('/:id', updateContactStatus);

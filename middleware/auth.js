@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Admin = require('../models/Admin');
 
-const auth = async (req, res, next) => {
+const authenticateToken = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     
@@ -24,4 +24,18 @@ const auth = async (req, res, next) => {
   }
 };
 
-module.exports = auth; 
+const isAdmin = async (req, res, next) => {
+  try {
+    if (!req.admin) {
+      throw new Error();
+    }
+    next();
+  } catch (error) {
+    res.status(403).json({ error: 'Access denied. Admin privileges required.' });
+  }
+};
+
+module.exports = {
+  authenticateToken,
+  isAdmin
+}; 
