@@ -15,6 +15,7 @@ const app = express();
 app.use(cors({
   origin: function(origin, callback) {
     const allowedOrigins = [
+      'https://gatistwamgroup.com',
       'https://gatistwamgroup.netlify.app',
       'https://gatistwam.netlify.app',
       'http://localhost:5173',
