@@ -3,9 +3,12 @@ const Portfolio = require('../models/Portfolio');
 // Get all portfolio items
 exports.getAllPortfolioItems = async (req, res) => {
   try {
+    console.log('Fetching all portfolio items');
     const portfolioItems = await Portfolio.find().sort({ createdAt: -1 });
+    console.log(`Found ${portfolioItems.length} portfolio items`);
     res.json(portfolioItems);
   } catch (error) {
+    console.error('Error in getAllPortfolioItems:', error);
     res.status(500).json({ message: 'Error fetching portfolio items', error: error.message });
   }
 };
@@ -68,10 +71,24 @@ exports.deletePortfolioItem = async (req, res) => {
 exports.getPortfolioItemsByStatus = async (req, res) => {
   try {
     const { status } = req.params;
+    console.log(`Fetching portfolio items with status: ${status}`);
+    
+    if (!['published', 'draft'].includes(status)) {
+      return res.status(400).json({ 
+        message: 'Invalid status. Must be either "published" or "draft"' 
+      });
+    }
+
     const portfolioItems = await Portfolio.find({ status }).sort({ createdAt: -1 });
+    console.log(`Found ${portfolioItems.length} portfolio items with status: ${status}`);
+    
     res.json(portfolioItems);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching portfolio items', error: error.message });
+    console.error('Error in getPortfolioItemsByStatus:', error);
+    res.status(500).json({ 
+      message: 'Error fetching portfolio items by status', 
+      error: error.message 
+    });
   }
 };
 
